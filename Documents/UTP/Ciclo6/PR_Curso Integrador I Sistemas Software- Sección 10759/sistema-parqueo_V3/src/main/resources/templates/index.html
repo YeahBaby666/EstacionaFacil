@@ -1,0 +1,57 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Parqueo</title>
+    <!-- (Aquí irían tus enlaces a CSS, por ahora usamos estilos en línea para el ejemplo) -->
+    <style>
+        /* (Estilos del body, header, etc. de esta pizarra) */
+        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;}
+        .action-box { background: var(--color-card); padding: 2rem; border-radius: var(--border-radius); border: 1px solid var(--color-card-border); }
+        .action-box h3 { margin-top: 0; color: var(--color-secondary); }
+        .action-box form { display: flex; flex-direction: column; gap: 1rem; }
+        .action-box input, .action-box button { font-family: var(--font-body); font-size: 1rem; padding: 0.8rem; border-radius: 0.5rem; border: 1px solid var(--color-card-border); background: #1f2937; color: var(--color-text); }
+        .action-box button { background: var(--color-primary); color: #111827; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+        .action-box button:hover { background: #6ee7b7; }
+        .error-message { color: var(--color-accent); margin-bottom: 1rem; background: rgba(248, 113, 113, 0.1); padding: 0.8rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bienvenido al Gestor de Parqueo</h1>
+            <p>Crea un nuevo estacionamiento o accede a uno existente para empezar a gestionar los espacios.</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Formulario de Creación -->
+            <div class="action-box">
+                <h3>Crear un Nuevo Estacionamiento</h3>
+                <div th:if="${errorCreacion}" class="error-message">
+                    <p th:text="${errorCreacion}"></p>
+                </div>
+                <form th:action="@{/estacionamiento/crear}" method="post">
+                    <input type="text" name="nombre" placeholder="Nombre del Estacionamiento" required>
+                    <input type="password" name="codigoAcceso" placeholder="Crea un Código de Acceso" required>
+                    <button type="submit">Crear y Gestionar</button>
+                </form>
+            </div>
+
+            <!-- Formulario de Búsqueda -->
+            <div class="action-box">
+                <h3>Gestionar uno Existente</h3>
+                <div th:if="${errorBusqueda}" class="error-message">
+                    <p th:text="${errorBusqueda}"></p>
+                </div>
+                 <form th:action="@{/estacionamiento/buscar}" method="post">
+                    <input type="text" name="nombre" placeholder="Nombre del Estacionamiento" required>
+                    <input type="password" name="codigoAcceso" placeholder="Código de Acceso" required>
+                    <button type="submit">Buscar y Gestionar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

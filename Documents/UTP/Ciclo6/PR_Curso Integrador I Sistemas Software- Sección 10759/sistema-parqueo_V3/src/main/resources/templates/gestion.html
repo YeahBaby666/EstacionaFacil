@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Gestión de ' + ${estacionamiento.nombre}">Panel de Gestión</title>
+    <!-- Librería de Íconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { 
+            transition: all 0.2s ease;
+        }
+        
+        /* --- NUEVO: ESTILOS PARA EL INDICADOR DE ESTADO --- */
+        #ws-status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            z-index: 9999;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .status-connected { color: #34d399; } /* Verde */
+        .status-disconnected { color: #f87171; } /* Rojo */
+        .status-error { color: #facc15; } /* Amarillo */
+    </style>
+</head>
+<body>
+    <!-- NUEVO: Icono indicador siempre visible -->
+    <div id="ws-status-indicator" class="status-disconnected" title="Desconectado">
+        <i class="bi bi-wifi-off"></i>
+    </div>
+
+    <div class="container">
+        <!-- ... resto del panel de gestión ... -->
+    </div>
+
+    <!-- Librerías para WebSocket -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusIndicator = document.getElementById('ws-status-indicator');
+            const statusIcon = statusIndicator.querySelector('i');
+            let stompClient = null;
+
+            function connect() {
+                const socket = new SockJS('/ws');
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, onConnected, onError);
+            }
+
+            function onConnected() {
+                statusIndicator.className = 'status-connected';
+                statusIndicator.title = 'Conectado al servidor';
+                statusIcon.className = 'bi bi-wifi';
+                
+                // Futuro: Suscribirse a un topic específico para este estacionamiento
+                // const estacionamientoId = /*[[${estacionamiento.id}]]*/ 'default';
+                // stompClient.subscribe('/topic/estacionamiento/' + estacionamientoId, onMessageReceived);
+            }
+
+            function onError(error) {
+                statusIndicator.className = 'status-error';
+                statusIndicator.title = 'Error de conexión. Reintentando...';
+                statusIcon.className = 'bi bi-wifi-off';
+                // Reintentar la conexión después de un tiempo
+                setTimeout(connect, 5000);
+            }
+            
+            // Iniciar la conexión al cargar la página
+            connect();
+        });
+    </script>
+</body>
+</html>

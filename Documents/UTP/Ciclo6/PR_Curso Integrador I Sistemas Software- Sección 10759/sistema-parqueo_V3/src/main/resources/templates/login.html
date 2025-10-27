@@ -1,0 +1,21 @@
+<!-- src/main/resources/templates/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Login</title></head>
+<body>
+    <h2>Iniciar Sesión</h2>
+    <div th:if="${param.error}">
+        <!-- Mensaje de error -->
+        Usuario o contraseña inválidos.
+    </div>
+    <div th:if="${param.logout}">
+        Has cerrado sesión.
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div><label> Username : <input type="text" name="username"/> </label></div>
+        <div><label> Password: <input type="password" name="password"/> </label></div>
+        <div><input type="submit" value="Entrar"/></div>
+    </form>
+    <a th:href="@{/register}">¿No tienes cuenta? Regístrate</a>
+</body>
+</html>
