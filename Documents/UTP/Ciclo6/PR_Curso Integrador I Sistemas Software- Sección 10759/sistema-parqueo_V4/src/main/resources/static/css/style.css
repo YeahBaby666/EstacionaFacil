@@ -1,0 +1,31 @@
+/* --- static/css/style.css --- */
+/* Clases de estado para los espacios de parqueo */
+
+.espacio {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.espacio.disponible {
+    background-color: #d1fae5; /* Verde claro */
+    border-color: #10b981; /* Verde */
+    color: #065f46;
+}
+.espacio.disponible:hover {
+    background-color: #a7f3d0;
+}
+
+.espacio.reservado {
+    background-color: #fef3c7; /* Amarillo claro */
+    border-color: #f59e0b; /* Amarillo */
+    color: #92400e;
+}
+.espacio.reservado:hover {
+    background-color: #fde68a;
+}
+
+.espacio.ocupado {
+    background-color: #fee2e2; /* Rojo claro */
+    border-color: #ef4444; /* Rojo */
+    color: #991b1b;
+}

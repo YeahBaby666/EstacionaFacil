@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- CORREGIDO: Añadido th:fragment="layout" y lang="es" -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" 
+      th:fragment="layout(mainContent, pageTitle)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|EstacionaFacil - ${pageTitle}|">EstacionaFacil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- STOMP (Solo se usará en index.html, pero se puede cargar aquí) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        /* Estilos para los espacios de parqueo (inyectados por JS) */
+        .disponible { background-color: #22c55e; color: white; } /* green-500 */
+        .reservado { background-color: #eab308; color: white; } /* yellow-500 */
+        .ocupado { background-color: #ef4444; color: white; } /* red-500 */
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <!-- Barra de Navegación -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a th:href="@{/}" class="text-2xl font-bold">EstacionaFacil</a>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Vínculos solo para usuarios autenticados -->
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/}" class="hover:bg-indigo-700 px-3 py-2 rounded">Parqueo</a>
+                    <a th:href="@{/vehiculos}" class="hover:bg-indigo-700 px-3 py-2 rounded">Mis Vehículos</a>
+                    
+                    <!-- Vínculo solo para ADMIN -->
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/panel}" class="bg-yellow-400 text-black px-3 py-2 rounded font-semibold hover:bg-yellow-300">Panel Admin</a>
+                    
+                    <!-- Formulario de Logout -->
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-3 py-2 rounded">Cerrar Sesión</button>
+                    </form>
+                </div>
+                
+                <!-- Vínculos solo para invitados (no autenticados) -->
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="hover:bg-indigo-700 px-3 py-2 rounded">Login</a>
+                    <a th:href="@{/register}" class="bg-green-500 hover:bg-green-600 px-3 py-2 rounded">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal (Inyectado por otras vistas) -->
+    <main th:replace="${mainContent}">
+        <!-- El contenido de la página (ej. index.html) irá aquí -->
+    </main>
+
+</body>
+</html>
